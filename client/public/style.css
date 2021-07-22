@@ -1,0 +1,64 @@
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+.container {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.container > div {
+  margin: 30px;
+  padding: 30px;
+}
+
+.recent-transactions {
+  background-color: burlywood;
+  width: 250px;
+  align-items: center;
+}
+
+.balance {
+  display: flex;
+}
+
+.balance > div {
+  padding: 20px;
+}
+
+.transaction-card {
+  position: relative;
+  width: 100%;
+  min-height: 50px;
+  background-color: aliceblue;
+  padding: 10px;
+  margin: 5px;
+  box-shadow: 5px 5px 5px rgb(53, 53, 53);
+}
+
+.transaction-card button {
+  border: none;
+  padding: 5px;
+  background-color: burlywood;
+  border-radius: 5px;
+  color: aliceblue;
+}
+
+#add {
+  padding: 20px;
+}
+
+.delete-btn {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+}
+
+.income {
+  color: green;
+}
+
+.expense {
+  color: red;
+}
