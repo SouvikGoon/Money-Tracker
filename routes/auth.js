@@ -20,13 +20,15 @@ router.post("/register", async (req, res) => {
   //validate user data
   const { error } = validationSchemaRegistration.validate(req.body);
   if (error) {
-    return res.status(400).json({ joierror: error });
+    return res.status(400).json({ success: false, error: error });
   }
 
   //if user already exists
   const existsUser = await User.findOne({ email: req.body.email });
   if (existsUser) {
-    return res.status(200).json({ message: "User already exists!" });
+    return res
+      .status(400)
+      .json({ success: false, error: "User already exists!" });
   }
 
   //if valid user data and user doesn't exist already
@@ -43,12 +45,9 @@ router.post("/register", async (req, res) => {
 
   try {
     const addedUser = await newUser.save();
-    res.status(201).json({
-      success: true,
-      userDetails: { username: addedUser.name, useremail: addedUser.email },
-    });
+    res.status(201).json({ success: true });
   } catch (err) {
-    res.status(500).json(err);
+    res.status(500).json({ success: false, error: err });
   }
 });
 
@@ -65,13 +64,15 @@ router.post("/login", async (req, res) => {
   //validate user data
   const { error } = validationSchemaLogin.validate(req.body);
   if (error) {
-    return res.status(400).json({ joierror: error });
+    return res.status(400).json({ success: false, error: error });
   }
 
   //check if user exists or not
   const existsUser = await User.findOne({ email: req.body.email });
   if (!existsUser) {
-    return res.status(400).json({ message: "User doesn't exist!" });
+    return res
+      .status(400)
+      .json({ success: false, error: "User doesn't exist!" });
   }
 
   //check if password is correct
@@ -80,7 +81,7 @@ router.post("/login", async (req, res) => {
     existsUser.password
   );
   if (!isValidPassword) {
-    res.status(400).json({ message: "Password incorrect!" });
+    res.status(400).json({ success: false, error: "Password incorrect!" });
   }
 
   //create a token if all above validation succeeds and return success message along with token
@@ -88,7 +89,7 @@ router.post("/login", async (req, res) => {
   res
     .header("auth-token", token)
     .status(200)
-    .json({ message: "Login success", auth_token: token });
+    .json({ success: true, auth_token: token });
 });
 
 module.exports = router;

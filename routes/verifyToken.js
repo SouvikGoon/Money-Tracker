@@ -3,7 +3,7 @@ const jwt = require("jsonwebtoken");
 function verifyToken(req, res, next) {
   const authToken = req.header("auth-token");
   if (!authToken) {
-    return res.status(401).json({ message: "Access Denied!" });
+    return res.status(401).json({ success: false, error: "Access Denied!" });
   }
 
   try {
@@ -12,7 +12,7 @@ function verifyToken(req, res, next) {
     //console.log(verifiedToken);
     next();
   } catch (err) {
-    res.status(400).json({ message: "Invalid token", error: err });
+    res.status(400).json({ success: false, error: err });
   }
 }
 

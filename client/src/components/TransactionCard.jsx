@@ -1,6 +1,6 @@
 import React from "react";
 
-function TransactionCard({ transaction, onDelete }) {
+function TransactionCard({ transaction, deleteTransaction }) {
   return (
     <div className="transaction-card">
       <p>{transaction.detail}</p>
@@ -8,7 +8,7 @@ function TransactionCard({ transaction, onDelete }) {
       <button
         className="delete-btn"
         onClick={() => {
-          onDelete(transaction.id);
+          deleteTransaction(transaction._id);
         }}
       >
         Delete

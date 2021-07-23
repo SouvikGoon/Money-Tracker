@@ -12,7 +12,7 @@ router.get("/", verifyToken, async (req, res) => {
     const data = await Transaction.find({ userId: req.user.user_id });
     res.status(200).json({ success: true, data: data });
   } catch (err) {
-    res.json(err);
+    res.status(500).json({ success: false, error: err });
   }
 });
 
@@ -29,9 +29,9 @@ router.post("/", verifyToken, async (req, res) => {
 
   try {
     const addedTransaction = await newTransaction.save();
-    res.status(201).json(addedTransaction);
+    res.status(201).json({ success: true, data: addedTransaction });
   } catch (err) {
-    res.json(err);
+    res.status(500).json({ success: false, error: err });
   }
 });
 
@@ -39,13 +39,13 @@ router.post("/", verifyToken, async (req, res) => {
 
 //route for deleting transaction
 router.delete("/:id", verifyToken, async (req, res) => {
-  const idToDelete = req.params.id;
+  const idToDelete = mongoose.Types.ObjectId(req.params.id);
 
   try {
     const deletedTransaction = await Transaction.deleteOne({ _id: idToDelete });
-    res.json(deletedTransaction);
+    res.json({ success: true, data: deletedTransaction });
   } catch (err) {
-    res.json(err);
+    res.json({ success: false, error: err });
   }
 });
 

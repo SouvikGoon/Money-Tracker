@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 function AddTransaction(props) {
   const [inputTransaction, setInputTransaction] = useState({
-    id: Date.now(),
+    _id: "",
     detail: "",
     amount: "",
     type: "",
@@ -63,12 +63,12 @@ function AddTransaction(props) {
             event.preventDefault();
 
             //add transaction to the list in parent component "App"
-            props.onAdd(inputTransaction);
+            props.addTransaction(inputTransaction);
 
             //clear input field and assign a new id
             setInputTransaction((prevState) => {
               return {
-                id: Date.now(),
+                _id: "",
                 detail: "",
                 amount: "",
                 type: prevState.type,
