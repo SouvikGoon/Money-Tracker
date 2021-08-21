@@ -85,11 +85,7 @@ router.post("/login", async (req, res) => {
   }
 
   //create a token if all above validation succeeds and return success message along with token
-  const token = jwt.sign(
-    { user_id: existsUser._id },
-    process.env.TOKEN_SECRET,
-    { expiresIn: "1d" }
-  );
+  const token = jwt.sign({ user_id: existsUser._id }, process.env.TOKEN_SECRET);
   res
     .header("auth-token", token)
     .status(200)

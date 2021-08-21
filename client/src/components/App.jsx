@@ -1,20 +1,18 @@
-import React, { useState } from "react";
+import React from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import LandingPage from "./LandingPage";
 import Register from "./Register";
 import Login from "./Login";
-import ProtectedRoute from "./ProtectedRoute";
 import Dashboard from "./Dashboard";
 
 function App() {
   return (
-    <div>
+    <div className="container">
+      <h1>Expense Tracker</h1>
       <Router>
         <Switch>
-          <Route path="/" exact component={LandingPage} />
           <Route path="/register" exact component={Register} />
-          <Route path="/login" exact component={Login} />
-          <ProtectedRoute path="/dashboard" exact component={Dashboard} />
+          <Route path="/" exact component={Login} />
+          <Route path="/dashboard" exact component={Dashboard} />
         </Switch>
       </Router>
     </div>
@@ -22,5 +20,3 @@ function App() {
 }
 
 export default App;
-
-//8252579699

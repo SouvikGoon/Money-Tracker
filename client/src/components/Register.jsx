@@ -43,41 +43,38 @@ function Register() {
   }
 
   return (
-    <div className="register-wrapper">
-      <form className="register-form">
-        <label htmlFor="name">Name</label>
-        <input
-          type="text"
-          name="name"
-          autoFocus
-          placeholder="Enter name..."
-          onChange={handleInputChange}
-          value={userInput.name}
-        />
-        <label htmlFor="email">Email</label>
-        <input
-          type="text"
-          name="email"
-          placeholder="Enter email..."
-          onChange={handleInputChange}
-          value={userInput.email}
-        />
-        <label htmlFor="password">Password</label>
-        <input
-          type="password"
-          name="password"
-          placeholder="Enter password..."
-          onChange={handleInputChange}
-          value={userInput.password}
-        />
-        <button type="submit" onClick={handleClick}>
-          Register
-        </button>
-        <p>
-          Already Registered? <Link to="/login">Login</Link>
-        </p>
-      </form>
-    </div>
+    <form className="register-form">
+      <label htmlFor="name">Name</label>
+      <input
+        type="text"
+        name="name"
+        placeholder="Enter name..."
+        onChange={handleInputChange}
+        value={userInput.name}
+      />
+      <label htmlFor="email">Email</label>
+      <input
+        type="text"
+        name="email"
+        placeholder="Enter email..."
+        onChange={handleInputChange}
+        value={userInput.email}
+      />
+      <label htmlFor="password">Password</label>
+      <input
+        type="password"
+        name="password"
+        placeholder="Enter password..."
+        onChange={handleInputChange}
+        value={userInput.password}
+      />
+      <button type="submit" onClick={handleClick}>
+        Register
+      </button>
+      <p>
+        Already Registered? <Link to="/">Login</Link>
+      </p>
+    </form>
   );
 }
 
