@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { Redirect } from "react-router-dom";
+import Navbar from "./Navbar";
 import AddTransaction from "./AddTransaction";
 import TransactionCard from "./TransactionCard";
 import Balance from "./Balance";
@@ -6,6 +8,7 @@ import Balance from "./Balance";
 function Dashboard() {
   //declaring state for managing the transactions list
   const [transactionsList, setTransactionsList] = useState([]);
+  const [isAuth, setIsAuth] = useState(true);
 
   //fetching all stored transactions from the backend ( add auth token to request )
   useEffect(() => {
@@ -22,7 +25,10 @@ function Dashboard() {
     });
     const data = await response.json();
 
-    if (data.success === true) setTransactionsList(data.data);
+    if (data.success === true) {
+      setTransactionsList(data.data);
+      setIsAuth(true);
+    }
   }
 
   let balance = {
@@ -92,21 +98,29 @@ function Dashboard() {
     }
   }
 
+  if (!isAuth) {
+    return <Redirect to="/login" />;
+  }
+
   return (
-    <div className="container">
-      <AddTransaction addTransaction={addTransaction} />
-      <div className="recent-transactions">
-        {transactionsList.map((transaction) => {
-          return (
-            <TransactionCard
-              key={transaction._id}
-              transaction={transaction}
-              deleteTransaction={deleteTransaction}
-            />
-          );
-        })}
+    <div>
+      <Navbar />
+      <div className="container-dashboard">
+        <AddTransaction addTransaction={addTransaction} />
+        <div className="recent-transactions">
+          <p>Recent Transactions</p>
+          {transactionsList.map((transaction) => {
+            return (
+              <TransactionCard
+                key={transaction._id}
+                transaction={transaction}
+                deleteTransaction={deleteTransaction}
+              />
+            );
+          })}
+        </div>
+        <Balance balance={balance} />
       </div>
-      <Balance balance={balance} />
     </div>
   );
 }
