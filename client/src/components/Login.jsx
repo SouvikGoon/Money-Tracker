@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 
 function Login() {
   //declare state
@@ -7,6 +7,10 @@ function Login() {
     email: "",
     password: "",
   });
+
+  let history = useHistory();
+
+  const [isInvalid, setInvalid] = useState(false);
 
   function handleInputChange(event) {
     const eventCallerName = event.target.name;
@@ -22,7 +26,7 @@ function Login() {
 
   function handleClick(event) {
     event.preventDefault();
-    callLogin();
+    return callLogin();
   }
 
   async function callLogin() {
@@ -41,34 +45,44 @@ function Login() {
 
     if (data.success === true) {
       localStorage.setItem("authToken", data.auth_token);
+      localStorage.setItem("isAuthenticated", true);
+      history.push("/dashboard");
+    } else {
+      setInvalid((prev) => !prev);
     }
   }
 
   return (
-    <form className="login-form">
-      <label htmlFor="email">Email</label>
-      <input
-        type="text"
-        name="email"
-        placeholder="Enter email..."
-        onChange={handleInputChange}
-        value={userInput.email}
-      />
-      <label htmlFor="password">Password</label>
-      <input
-        type="password"
-        name="password"
-        placeholder="Enter password..."
-        onChange={handleInputChange}
-        value={userInput.password}
-      />
-      <button type="submit" onClick={handleClick}>
-        Login
-      </button>
-      <p>
-        New User? <Link to="/register">Register</Link>
-      </p>
-    </form>
+    <div className="login-wrapper">
+      <form className="login-form">
+        {isInvalid && (
+          <p style={{ color: "red" }}>Incorrect username or password!</p>
+        )}
+        <label htmlFor="email">Email</label>
+        <input
+          type="text"
+          name="email"
+          autoFocus
+          placeholder="Enter email..."
+          onChange={handleInputChange}
+          value={userInput.email}
+        />
+        <label htmlFor="password">Password</label>
+        <input
+          type="password"
+          name="password"
+          placeholder="Enter password..."
+          onChange={handleInputChange}
+          value={userInput.password}
+        />
+        <button type="submit" onClick={handleClick}>
+          Login
+        </button>
+        <p>
+          New User? <Link to="/register">Register</Link>
+        </p>
+      </form>
+    </div>
   );
 }
 
