@@ -24,6 +24,8 @@ router.post("/", verifyToken, async (req, res) => {
     detail: req.body.detail,
     amount: req.body.amount,
     type: req.body.type,
+    date: req.body.date,
+    category: req.body.category,
     userId: req.user.user_id,
   });
 

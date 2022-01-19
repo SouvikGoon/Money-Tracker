@@ -7,11 +7,11 @@ function LandingPage() {
       <div className="landing-top">
         <h1>Expense Tracker</h1>
         <div>
-          <Link to="/login">
-            <button className="landing-btn">Login</button>
+          <Link to="/login" className="landing-btn">
+            LOGIN
           </Link>
-          <Link to="/register">
-            <button className="landing-btn">Register</button>
+          <Link to="/register" className="landing-btn">
+            REGISTER
           </Link>
         </div>
       </div>

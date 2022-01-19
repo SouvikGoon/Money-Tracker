@@ -1,21 +1,38 @@
 import React from "react";
-import deleteIcon from "../icons/delete.png";
+import IconButton from "@material-ui/core/IconButton";
+import DeleteIcon from "@material-ui/icons/Delete";
+import { Avatar } from "@material-ui/core";
 
 function TransactionCard({ transaction, deleteTransaction }) {
   return (
     <div className="transaction-card">
-      <div>
-        <p>{transaction.detail}</p>
-        <h2 className={transaction.type}>&#x20b9; {transaction.amount}</h2>
+      <div className="transaction-card-category">
+        <Avatar>
+          <img
+            src={"/images/icons/" + transaction.category + ".png"}
+            style={{ maxWidth: "100%", maxHeight: "100%" }}
+          />
+        </Avatar>
+        <p className="category-text">{transaction.category}</p>
       </div>
-      <button
-        className="delete-btn"
-        onClick={() => {
-          deleteTransaction(transaction._id);
-        }}
-      >
-        <img src={deleteIcon} alt="delete" width="15px" height="15px" />
-      </button>
+      <div className="transaction-card-text">
+        <p className="main-text">
+          {transaction.detail.slice(0, 40)}
+          <span>{transaction.detail.length > 40 ? "..." : " "}</span>
+        </p>
+        <p className="sub-text">{new Date(transaction.date).toDateString()}</p>
+      </div>
+      <h3 className={transaction.type}>&#x20b9; {transaction.amount}</h3>
+
+      <div className="delete-btn">
+        <IconButton
+          onClick={() => {
+            deleteTransaction(transaction._id);
+          }}
+        >
+          <DeleteIcon />
+        </IconButton>
+      </div>
     </div>
   );
 }

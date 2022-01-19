@@ -1,6 +1,7 @@
 import React from "react";
-import { Link, useHistory } from "react-router-dom";
-import mainIcon from "../icons/calculator.png";
+import { useHistory } from "react-router-dom";
+import { Button } from "@material-ui/core";
+import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 
 function Navbar() {
   let history = useHistory();
@@ -11,23 +12,26 @@ function Navbar() {
   }
 
   return (
-    <div>
+    <div className="navwrapper">
       <nav>
         <div>
           <img
             className="main-icon"
-            src={mainIcon}
+            src={/images/icons/wallet.png}
             alt="main-icon"
             width="35px"
             height="35px"
           />
           <h1>Expense Tracker</h1>
         </div>
-        <Link to="/">
-          <button className="btn-logout" onClick={handleLogout}>
-            Logout
-          </button>
-        </Link>
+        <Button
+          variant="contained"
+          color="secondary"
+          startIcon={<AccountCircleIcon />}
+          onClick={handleLogout}
+        >
+          Logout
+        </Button>
       </nav>
       <hr />
     </div>

@@ -20,7 +20,9 @@ router.post("/register", async (req, res) => {
   //validate user data
   const { error } = validationSchemaRegistration.validate(req.body);
   if (error) {
-    return res.status(400).json({ success: false, error: error });
+    return res
+      .status(400)
+      .json({ success: false, error: error.details[0].message });
   }
 
   //if user already exists
@@ -45,7 +47,17 @@ router.post("/register", async (req, res) => {
 
   try {
     const addedUser = await newUser.save();
-    res.status(201).json({ success: true });
+    // res.status(201).json({ success: true });
+    //create a token if new user is added to db and return success message along with token
+    const token = jwt.sign(
+      { user_id: addedUser._id },
+      process.env.TOKEN_SECRET,
+      { expiresIn: "1d" }
+    );
+    res
+      .header("auth-token", token)
+      .status(200)
+      .json({ success: true, auth_token: token });
   } catch (err) {
     res.status(500).json({ success: false, error: err });
   }

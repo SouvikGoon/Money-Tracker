@@ -1,9 +1,15 @@
 import React, { useState } from "react";
 import { Link, useHistory } from "react-router-dom";
+import { TextField, Button } from "@material-ui/core";
+import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 
 function Login() {
   //declare state
   const [userInput, setUserInput] = useState({
+    email: "",
+    password: "",
+  });
+  const [helper, setHelper] = useState({
     email: "",
     password: "",
   });
@@ -24,9 +30,47 @@ function Login() {
     });
   }
 
+  function isValid() {
+    if (userInput.email === "") {
+      setHelper((prev) => {
+        return {
+          ...prev,
+          email: "Enter email",
+        };
+      });
+
+      return false;
+    }
+
+    if (userInput.password === "") {
+      setHelper((prev) => {
+        return {
+          ...prev,
+          password: "Enter password",
+        };
+      });
+
+      return false;
+    }
+
+    return true;
+  }
+
+  function handleInputClick(event) {
+    const eventCallerName = event.target.name;
+    setHelper((prev) => {
+      return {
+        ...prev,
+        [eventCallerName]: "",
+      };
+    });
+
+    setInvalid(false);
+  }
+
   function handleClick(event) {
     event.preventDefault();
-    return callLogin();
+    return isValid() && callLogin();
   }
 
   async function callLogin() {
@@ -49,35 +93,50 @@ function Login() {
       history.push("/dashboard");
     } else {
       setInvalid((prev) => !prev);
+      setUserInput({
+        email: "",
+        password: "",
+      });
     }
   }
 
   return (
     <div className="login-wrapper">
-      <form className="login-form">
+      <form id="login-form">
+        <div className="login-icon">
+          <AccountCircleIcon fontSize="large" />
+        </div>
         {isInvalid && (
-          <p style={{ color: "red" }}>Incorrect username or password!</p>
+          <p style={{ color: "red" }}>Incorrect email or password!</p>
         )}
-        <label htmlFor="email">Email</label>
-        <input
-          type="text"
+        <TextField
+          label="Email"
+          variant="outlined"
           name="email"
           autoFocus
-          placeholder="Enter email..."
           onChange={handleInputChange}
           value={userInput.email}
+          helperText={helper.email}
+          onClick={handleInputClick}
         />
-        <label htmlFor="password">Password</label>
-        <input
+        <TextField
+          label="Password"
+          variant="outlined"
           type="password"
           name="password"
-          placeholder="Enter password..."
           onChange={handleInputChange}
           value={userInput.password}
+          helperText={helper.password}
+          onClick={handleInputClick}
         />
-        <button type="submit" onClick={handleClick}>
+        <Button
+          variant="contained"
+          color="primary"
+          type="submit"
+          onClick={handleClick}
+        >
           Login
-        </button>
+        </Button>
         <p>
           New User? <Link to="/register">Register</Link>
         </p>
