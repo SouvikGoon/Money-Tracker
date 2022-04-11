@@ -8,30 +8,13 @@ import FormHelperText from "@material-ui/core/FormHelperText";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
-import Snackbar from "@material-ui/core/Snackbar";
 
 function AddTransaction(props) {
+  //variable for setting default date to present day
   let dateObj = new Date();
   let currDate = dateObj.toISOString().slice(0, 10);
 
-  const [inputTransaction, setInputTransaction] = useState({
-    _id: "",
-    detail: "",
-    amount: "",
-    date: currDate,
-    type: "expense",
-    category: "",
-  });
-
-  const [helper, setHelper] = useState({
-    detail: "",
-    amount: "",
-    type: "",
-    category: "",
-  });
-
-  const [showSuccess, setShowSuccess] = useState(false);
-
+  //options for income and expense categories
   let expenseCategories = [
     "Food",
     "Commute",
@@ -52,8 +35,29 @@ function AddTransaction(props) {
     "Other",
   ];
 
+  //declare states
+  //state for keeping track of user input for a new transaction
+  const [inputTransaction, setInputTransaction] = useState({
+    _id: "",
+    detail: "",
+    amount: "",
+    date: currDate,
+    type: "expense",
+    category: "",
+  });
+
+  //state for setting helper text for input textfields
+  const [helper, setHelper] = useState({
+    detail: "",
+    amount: "",
+    type: "",
+    category: "",
+  });
+
+  //state for changing category based on transaction type
   const [categoryArr, setCategoryArr] = useState(expenseCategories);
 
+  //function for validating user input before making post request to api
   function isValid() {
     if (inputTransaction.detail === "") {
       setHelper((prev) => {
@@ -117,7 +121,7 @@ function AddTransaction(props) {
   }
 
   return (
-    <div>
+    <div className="add-wrapper">
       <form id="add" autoComplete="off">
         <FormControl>
           {/* <FormLabel>Type</FormLabel> */}
@@ -143,6 +147,7 @@ function AddTransaction(props) {
         <TextField
           name="detail"
           label="Description"
+          variant="outlined"
           onChange={handleInputChange}
           value={inputTransaction.detail}
           helperText={helper.detail}
@@ -159,6 +164,7 @@ function AddTransaction(props) {
         <TextField
           name="amount"
           label="Amount"
+          variant="outlined"
           type="Number"
           onChange={handleInputChange}
           value={inputTransaction.amount}
@@ -176,7 +182,7 @@ function AddTransaction(props) {
         <TextField
           name="date"
           type="date"
-          defaultValue={inputTransaction.date}
+          variant="outlined"
           value={inputTransaction.date}
           onChange={handleInputChange}
         />
@@ -213,6 +219,8 @@ function AddTransaction(props) {
 
             //add transaction to the list in parent component "App" if non empty inputs
             if (isValid()) {
+              //close the form first if the from appears inside dialog box
+              props.handleFormClose();
               props.addTransaction(inputTransaction);
 
               //clear input field and assign a new id
@@ -226,23 +234,12 @@ function AddTransaction(props) {
                   category: "",
                 };
               });
-
-              //show success snackbar
-              setShowSuccess(true);
             }
           }}
         >
           Add
         </Button>
       </form>
-
-      <Snackbar
-        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
-        open={showSuccess}
-        onClose={() => setShowSuccess(false)}
-        message="Transaction added successfully."
-        autoHideDuration={3000}
-      />
     </div>
   );
 }

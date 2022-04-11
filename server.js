@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+const path = require("path");
 const dotenv = require("dotenv");
 const mongoose = require("mongoose");
 const authRoute = require("./routes/auth");
@@ -20,6 +21,18 @@ app.use(express.json());
 //routes middleware
 app.use("/api/user", authRoute);
 app.use("/api/transactions", transactionsRoute);
+
+//if running in production, serve index page
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, "/client/build")));
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "client", "build", "index.html"));
+  });
+} else {
+  app.get("/", (req, res) => {
+    res.send("Api Running.");
+  });
+}
 
 //start listening
 const port = process.env.PORT;

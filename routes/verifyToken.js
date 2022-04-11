@@ -12,7 +12,7 @@ function verifyToken(req, res, next) {
     //console.log(verifiedToken);
     next();
   } catch (err) {
-    res.status(400).json({ success: false, error: err });
+    res.status(400).json({ success: false, error: err.message });
   }
 }
 

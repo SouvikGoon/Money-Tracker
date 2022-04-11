@@ -5,6 +5,7 @@ import Register from "./Register";
 import Login from "./Login";
 import ProtectedRoute from "./ProtectedRoute";
 import Dashboard from "./Dashboard";
+import Stats from "./Stats";
 import NoMatch from "./NoMatch";
 
 function App() {
@@ -16,7 +17,8 @@ function App() {
           <Route path="/register" exact component={Register} />
           <Route path="/login" exact component={Login} />
           <ProtectedRoute path="/dashboard" exact component={Dashboard} />
-          <Route component={NoMatch} />
+          <ProtectedRoute path="/stats" exact component={Stats} />
+          <Route path="*" component={NoMatch} />
         </Switch>
       </Router>
     </div>

@@ -17,44 +17,108 @@ form {
   position: sticky;
   top: 0;
   z-index: 5;
-  background-color: white;
+  background-color: rgb(255, 255, 255);
 }
 nav {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 30px 0px;
+  border-bottom: 1px solid #dcdede;
+  padding: 0px 20px;
 }
-nav div {
+.main-logo {
   display: inline-flex;
+  align-items: center;
 }
 
 .main-icon {
   margin: 10px;
 }
 
-hr {
-  width: 90%;
-  color: gray;
+.logo-text {
+  font-weight: 600;
+  font-size: large;
+}
+
+.dashboard-left {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.nav-link {
+  margin: 0px 0px 0px 50px;
+  text-decoration: none;
+  color: #383736;
+  font-weight: 600;
+  font-size: large;
+}
+
+.nav-link:hover {
+  opacity: 80%;
+}
+
+.active {
+  color: #2196f3;
+}
+
+.sidebar-close-btn {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.sidebar-content {
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding-top: 10px;
+}
+
+.sidebar-nav-link {
+  text-decoration: none;
+  padding: 15px;
+  color: #383736;
+  font-weight: 600;
+  font-size: large;
+}
+
+.active {
+  color: #2196f3;
 }
 
 /* main body */
-/* .container-dashboard {
-  display: flex;
-  justify-content: space-evenly;
-} */
+/* add transaction section */
+.add-wrapper {
+  background-color: white;
+  padding: 5px;
+  border-radius: 10px;
+  margin-top: 56.2px;
+}
+
+/* transactions display section */
+.container-dashboard {
+  padding-top: 20px;
+  background-color: #f8fafb;
+}
 
 .recent-transactions {
-  border-radius: 5px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 50px;
+  margin-bottom: 70px;
+  min-height: 100vh;
 }
 
 .recent-transactions-header {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
+  background-color: white;
+  border-radius: 50px;
+  width: 50%;
+  margin-bottom: 20px;
 }
 
 .transaction-card {
@@ -65,7 +129,7 @@ hr {
   min-height: 50px;
   border-radius: 5px;
   background-color: white;
-  padding: 10px;
+  /* padding: 10px; */
   margin: 5px;
   box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.2), 0 4px 8px 0 rgba(0, 0, 0, 0.19);
 }
@@ -73,11 +137,11 @@ hr {
 .transaction-card-category {
   display: flex;
   align-items: center;
+  justify-content: space-around;
   flex: 2;
 }
 
 .category-text {
-  padding-left: 15px;
   font-weight: 100;
   font-size: smaller;
 }
@@ -92,8 +156,8 @@ hr {
 
 .main-text {
   margin-bottom: 0px;
-  font-weight: 400;
-  font-size: large;
+  font-weight: 200;
+  font-size: medium;
 }
 
 .sub-text {
@@ -104,13 +168,6 @@ hr {
   font-weight: 200;
 }
 
-.transaction-card h3 {
-  display: flex;
-  align-items: center;
-  flex: 1;
-  padding-left: 15px;
-}
-
 .delete-btn {
   flex: 1;
   display: flex;
@@ -119,61 +176,81 @@ hr {
 }
 
 .income {
-  color: #4caf50;
+  color: #4caf4f;
 }
 
 .expense {
   color: #f44336;
 }
 
-/* balance styling */
-.balance {
+.no-data {
   display: flex;
   flex-direction: column;
-  margin-top: 20px;
+  align-items: center;
+  justify-content: center;
+  color: gray;
+  opacity: 50%;
+}
+.no-data-image {
+  padding-left: 20px;
+  padding-top: 100px;
+  opacity: 50%;
+}
+
+/* balance styling */
+.balance {
+  height: calc(100vh - 70px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  font: "Roboto";
+  width: 100%;
+}
+
+.balance-card {
+  display: flex;
+  background-color: white;
+  font: "Roboto";
+  flex-direction: column;
+  align-items: center;
+  border-radius: 5px;
+  height: 150px;
+  padding: 20px 20px 0px 20px;
+  box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.2), 0 4px 8px 0 rgba(0, 0, 0, 0.19);
+}
+
+.balance-card p {
+  font-weight: 100;
+  font-size: 14px;
+  color: rgb(136, 133, 133);
+  text-align: center;
+  margin-top: 5px;
 }
 
 .balance-expense {
-  margin: 10px;
-  border-radius: 5px;
-  padding: 10px 50px;
   border-bottom: 10px solid #f44336;
-  box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.2), 0 4px 8px 0 rgba(0, 0, 0, 0.19);
 }
-.balance-expense p {
-  font-weight: 200;
-  color: rgb(136, 133, 133);
-  text-align: center;
-}
+
 .balance-income {
-  margin: 10px;
-  border-radius: 5px;
-  padding: 10px 50px;
   border-bottom: 10px solid #4caf50;
-  box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.2), 0 4px 8px 0 rgba(0, 0, 0, 0.19);
-}
-.balance-income p {
-  font-weight: 200;
-  color: rgb(136, 133, 133);
-  text-align: center;
 }
 
 .balance-remaining {
-  margin: 10px;
-  border-radius: 5px;
-  padding: 10px 50px;
   border-bottom: 10px solid #2196f3;
-  box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.2), 0 4px 8px 0 rgba(0, 0, 0, 0.19);
 }
-.balance-remaining p {
-  font-weight: 200;
-  color: rgb(136, 133, 133);
-  text-align: center;
+
+.balance-content-amount {
+  /* font-size: x-large; */
+  font-size: max(16px, 1.5vw);
+  font-weight: 800;
+  padding-top: 20px;
 }
 
 /* add transaction input card styling */
 #add > * {
   margin: 10px;
+  min-width: 280px;
 }
 
 /* landing page style */
@@ -279,4 +356,40 @@ hr {
 
 #register-form p {
   text-align: center;
+}
+
+/* stats page styling */
+
+.container-stats {
+  background-color: #f8fafb;
+  padding-top: 20px;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.month-changer {
+  display: flex;
+  justify-content: space-between;
+  background-color: white;
+  border-radius: 50px;
+  width: 50%;
+  margin: 0px auto;
+  max-width: 300px;
+}
+
+.stats-title {
+  display: flex;
+  justify-content: center;
+  padding-top: 20px;
+}
+.recharts-default-legend {
+  padding: 0px 20px 20px 20px !important;
+}
+/* 404 section */
+.no-match {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  flex-direction: column;
 }

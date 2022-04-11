@@ -1,5 +1,6 @@
 import React from "react";
 import { Redirect, Route } from "react-router-dom";
+import { TransactionsListProvider } from "../context/TransactionsListContext";
 
 function ProtectedRoute({ component: Component, ...restOfProps }) {
   const isAuthenticated = localStorage.getItem("isAuthenticated");
@@ -9,7 +10,13 @@ function ProtectedRoute({ component: Component, ...restOfProps }) {
     <Route
       {...restOfProps}
       render={(props) =>
-        isAuthenticated ? <Component {...props} /> : <Redirect to="/login" />
+        isAuthenticated === "true" ? (
+          <TransactionsListProvider>
+            <Component {...props} />
+          </TransactionsListProvider>
+        ) : (
+          <Redirect to="/login" />
+        )
       }
     />
   );

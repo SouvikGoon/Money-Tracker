@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Redirect } from "react-router-dom";
 import Navbar from "./Navbar";
 import AddTransaction from "./AddTransaction";
 import TransactionCard from "./TransactionCard";
 import Balance from "./Balance";
 import IconButton from "@material-ui/core/IconButton";
-import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
-import ChevronRightIcon from "@material-ui/icons/ChevronRight";
+import NavigateBeforeIcon from "@material-ui/icons/NavigateBefore";
+import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import Grid from "@material-ui/core/Grid";
 //below imports for making website design responsive
 import Hidden from "@material-ui/core/Hidden";
@@ -15,41 +15,38 @@ import AddIcon from "@material-ui/icons/Add";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Button from "@material-ui/core/Button";
 import Snackbar from "@material-ui/core/Snackbar";
 
+//importing global contexts
+import { TransactionsListContext } from "../context/TransactionsListContext";
+
 function Dashboard() {
+  const {
+    transactionsList,
+    getTransactions,
+    addTransaction,
+    deleteTransaction,
+    showMessage,
+    message,
+    resetShowMessage,
+  } = useContext(TransactionsListContext);
+  console.log("rendered");
+
   //declaring state for managing the transactions list
-  const [transactionsList, setTransactionsList] = useState([]);
-  const [isAuth, setIsAuth] = useState(true);
+  //const [transactionsList, setTransactionsList] = useState([]);
   const [currDate, setCurrDate] = useState(new Date().toISOString());
   const [balance, setBalance] = useState({
     income: Number(0),
     expense: Number(0),
   });
+  const isAuthenticated = localStorage.getItem("isAuthenticated");
 
   //fetching all stored transactions from the backend ( add auth token to request )
   useEffect(() => {
-    callGetTransaction();
+    getTransactions();
   }, []);
-
-  async function callGetTransaction() {
-    const response = await fetch("/api/transactions", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        "auth-token": localStorage.getItem("authToken"),
-      },
-    });
-    const data = await response.json();
-
-    if (data.success === true) {
-      setTransactionsList(data.data);
-      setIsAuth(true);
-    }
-  }
 
   //months array to display month
   const months = [
@@ -66,63 +63,6 @@ function Dashboard() {
     "November",
     "December",
   ];
-
-  //add transaction to the list of transactions
-  function addTransaction(newTransaction) {
-    callAddTransaction(newTransaction);
-  }
-
-  //funtion for calling backend api to post transaction
-  async function callAddTransaction(transactionDetails) {
-    setOpenAddForm(false);
-    const response = await fetch("/api/transactions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "auth-token": localStorage.getItem("authToken"),
-      },
-      body: JSON.stringify({
-        detail: transactionDetails.detail,
-        amount: transactionDetails.amount,
-        date: transactionDetails.date,
-        type: transactionDetails.type,
-        category: transactionDetails.category,
-      }),
-    });
-    const data = await response.json();
-
-    if (data.success === true) {
-      transactionDetails._id = data.data._id;
-      setTransactionsList((prevState) => {
-        return [transactionDetails, ...prevState];
-      });
-      setShowSuccess(true);
-    }
-  }
-
-  //delete transaction from the list
-  function deleteTransaction(idOfTransaction) {
-    callDeleteTransaction(idOfTransaction);
-  }
-
-  //function for calling backend api to delete transaction
-  async function callDeleteTransaction(transactionId) {
-    const response = await fetch("/api/transactions/" + transactionId, {
-      method: "DELETE",
-      headers: {
-        "auth-token": localStorage.getItem("authToken"),
-      },
-    });
-    const data = await response.json();
-
-    if (data.success === true) {
-      setTransactionsList((prevState) => {
-        return prevState.filter((transaction) => {
-          return transactionId !== transaction._id;
-        });
-      });
-    }
-  }
 
   //function to go to prev month for prev button
   function handlePrev() {
@@ -142,9 +82,40 @@ function Dashboard() {
     });
   }
 
+  //change balance state whenever month changes
+  useEffect(() => {
+    changeBalance();
+  }, [currDate, transactionsList]);
+
+  //function for changing balance
+  function changeBalance() {
+    let monthlyExpense = Number(0),
+      monthlyIncome = Number(0);
+
+    for (let i = 0; i < transactionsList.length; i++) {
+      if (
+        new Date(transactionsList[i].date).getMonth() ===
+          new Date(currDate).getMonth() &&
+        new Date(transactionsList[i].date).getFullYear() ===
+          new Date(currDate).getFullYear()
+      ) {
+        if (transactionsList[i].type === "expense") {
+          monthlyExpense += Number(transactionsList[i].amount);
+        } else {
+          monthlyIncome += Number(transactionsList[i].amount);
+        }
+      }
+    }
+
+    setBalance({
+      income: monthlyIncome,
+      expense: monthlyExpense,
+    });
+  }
+
   //for mobile devices
   const [openAddForm, setOpenAddForm] = useState(false);
-  const [showSuccess, setShowSuccess] = useState(false);
+  //const [showSuccess, setShowSuccess] = useState(showMessage);
 
   function handleAddIconClick() {
     setOpenAddForm(true);
@@ -154,7 +125,7 @@ function Dashboard() {
     setOpenAddForm(false);
   }
 
-  if (!isAuth) {
+  if (isAuthenticated === "false") {
     return <Redirect to="/login" />;
   }
 
@@ -164,31 +135,49 @@ function Dashboard() {
       <div className="container-dashboard">
         <Grid
           container
-          spacing={5}
+          spacing={0}
           direction="row"
           justifyContent="space-evenly"
         >
           <Hidden smDown>
             <Grid item xs={12} md={3}>
-              <AddTransaction addTransaction={addTransaction} />
+              <AddTransaction
+                addTransaction={addTransaction}
+                handleFormClose={() => {}}
+              />
             </Grid>
           </Hidden>
-          <Grid item xs={12} md={5}>
+          <Grid item xs={12} md={6}>
             <div className="recent-transactions">
               {/* <p>Recent Transactions</p> */}
               <div className="recent-transactions-header">
                 <IconButton onClick={handlePrev}>
-                  <ChevronLeftIcon />
+                  <NavigateBeforeIcon />
                 </IconButton>
                 <p>
                   {months[new Date(currDate).getMonth()]}{" "}
                   {new Date(currDate).getFullYear()}
                 </p>
                 <IconButton onClick={handleNext}>
-                  <ChevronRightIcon />
+                  <NavigateNextIcon />
                 </IconButton>
               </div>
-
+              <Hidden mdUp>
+                <Balance balance={balance} />
+              </Hidden>
+              {/* display no data icon if no transactions are available */}
+              {balance.income === 0 && balance.expense === 0 && (
+                <div className="no-data">
+                  <img
+                    className="no-data-image"
+                    src={"/images/icons/error.png"}
+                    width="100px"
+                    height="100px"
+                    alt="no data"
+                  />
+                  <p>No Data Available.</p>
+                </div>
+              )}
               {/* get transactions according to month */}
               {transactionsList
                 .filter((transaction) => {
@@ -216,7 +205,7 @@ function Dashboard() {
             </div>
           </Grid>
           <Hidden smDown>
-            <Grid item xs={12} md={3}>
+            <Grid item xs={12} md={2}>
               <Balance balance={balance} />
             </Grid>
           </Hidden>
@@ -230,26 +219,27 @@ function Dashboard() {
           >
             <AddIcon />
           </Fab>
+          {/* add transaction pop up for add icon */}
           <Dialog open={openAddForm} onClose={handleClose}>
             <DialogTitle>Add Transaction</DialogTitle>
             <DialogContent>
-              <AddTransaction addTransaction={addTransaction} />
+              <AddTransaction
+                addTransaction={addTransaction}
+                handleFormClose={handleClose}
+              />
             </DialogContent>
             <DialogActions>
               <Button onClick={handleClose} color="primary">
                 Cancel
               </Button>
-              {/* <Button onClick={handleClose} color="primary">
-                Subscribe
-              </Button> */}
             </DialogActions>
           </Dialog>
         </Hidden>
         <Snackbar
           anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
-          open={showSuccess}
-          onClose={() => setShowSuccess(false)}
-          message="Transaction added successfully."
+          open={showMessage}
+          onClose={() => resetShowMessage()}
+          message={message}
           autoHideDuration={3000}
         />
       </div>
