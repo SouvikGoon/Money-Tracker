@@ -24,9 +24,9 @@ app.use("/api/transactions", transactionsRoute);
 
 //if running in production, serve index page
 if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname, "/client/build")));
+  app.use(express.static("client/build"));
   app.get("*", (req, res) => {
-    res.sendFile(path.join(__dirname, "client", "build", "index.html"));
+    res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
   });
 } else {
   app.get("/", (req, res) => {
@@ -35,5 +35,5 @@ if (process.env.NODE_ENV === "production") {
 }
 
 //start listening
-const port = process.env.PORT;
-app.listen(port || 5000, () => console.log(`Server running on port ${port}.`));
+const port = process.env.PORT || 5000;
+app.listen(port, () => console.log(`Server running on port ${port}.`));
