@@ -74,16 +74,19 @@ function Login() {
   }
 
   async function callLogin() {
-    const response = await fetch("/api/user/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        email: userInput.email,
-        password: userInput.password,
-      }),
-    });
+    const response = await fetch(
+      "https://money-tracker-3lmv.onrender.com/api/user/login",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: userInput.email,
+          password: userInput.password,
+        }),
+      }
+    );
 
     const data = await response.json();
 

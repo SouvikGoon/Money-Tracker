@@ -97,17 +97,20 @@ function Register() {
   }
 
   async function callRegister() {
-    const response = await fetch("/api/user/register", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        name: userInput.name,
-        email: userInput.email,
-        password: userInput.password,
-      }),
-    });
+    const response = await fetch(
+      "https://money-tracker-3lmv.onrender.com/api/user/register",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: userInput.name,
+          email: userInput.email,
+          password: userInput.password,
+        }),
+      }
+    );
 
     const data = await response.json();
 

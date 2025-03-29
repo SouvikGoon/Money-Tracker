@@ -16,13 +16,16 @@ export const TransactionsListProvider = ({ children }) => {
 
   //actions
   async function getTransactions() {
-    const response = await fetch("/api/transactions", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        "auth-token": localStorage.getItem("authToken"),
-      },
-    });
+    const response = await fetch(
+      "https://money-tracker-3lmv.onrender.com/api/transactions",
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "auth-token": localStorage.getItem("authToken"),
+        },
+      }
+    );
 
     const data = await response.json();
 
@@ -44,20 +47,23 @@ export const TransactionsListProvider = ({ children }) => {
   }
 
   async function addTransaction(transactionObj) {
-    const response = await fetch("/api/transactions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "auth-token": localStorage.getItem("authToken"),
-      },
-      body: JSON.stringify({
-        detail: transactionObj.detail,
-        amount: transactionObj.amount,
-        date: transactionObj.date,
-        type: transactionObj.type,
-        category: transactionObj.category,
-      }),
-    });
+    const response = await fetch(
+      "https://money-tracker-3lmv.onrender.com/api/transactions",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "auth-token": localStorage.getItem("authToken"),
+        },
+        body: JSON.stringify({
+          detail: transactionObj.detail,
+          amount: transactionObj.amount,
+          date: transactionObj.date,
+          type: transactionObj.type,
+          category: transactionObj.category,
+        }),
+      }
+    );
 
     const data = await response.json();
 
@@ -81,12 +87,16 @@ export const TransactionsListProvider = ({ children }) => {
   }
 
   async function deleteTransaction(transactionId) {
-    const response = await fetch("/api/transactions/" + transactionId, {
-      method: "DELETE",
-      headers: {
-        "auth-token": localStorage.getItem("authToken"),
-      },
-    });
+    const response = await fetch(
+      "https://money-tracker-3lmv.onrender.com/api/transactions/" +
+        transactionId,
+      {
+        method: "DELETE",
+        headers: {
+          "auth-token": localStorage.getItem("authToken"),
+        },
+      }
+    );
 
     const data = await response.json();
 
